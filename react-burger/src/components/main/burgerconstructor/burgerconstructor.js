@@ -3,69 +3,86 @@ import ReactDOM from 'react-dom';
 
 import './burgerconstructor.css';
 
-// import data from '../utils/data.js';
-import data from './data.js';
+import data from '../utils/data.js';
 
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 
-// class ConstructTop_ extends React.Component {
-//   render() {
-//     return (
-//       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-
-//  <ConstructorElement
-//   type={data.props.type}
-//   isLocked={true}
-//   text={data.props.name}
-//   price={data.props.price}
-//   thumbnail={data.props.image}
-// />
-
-
-//       </div>
-  
-//     )
-//   }
-// } 
-
-
-
-
-const ConstructorElement_ = () => {
+const TopElement = () => {
   return (
-    <ul className={`bbb @{styles.list} custom-scroll`}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-        {data.map((item) => (
-
+      {data.map((item) => (
+        item.type === 'bun' && (
           <ConstructorElement
+            key={item.id}
+            isLocked={true}
             type={item.type}
-            // isLocked={true}
             text={item.name}
             price={item.price}
             thumbnail={item.image}
           />
-          
-        ))}
+          )
+          ))}
+      </div>
 
+  )  
+}
+const root = ReactDOM.createRoot(document.querySelector('#root'));
+root.render(<TopElement />);
+
+
+const MainElement = () => {
+  return (
+    <ul className={`bbb @{styles.list} custom-scroll`}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {data.map((item) => (
+        // item.type !== 'bun' && (
+          <ConstructorElement
+            key={item.id}
+            type={item.type}
+            text={item.name}
+            price={item.price}
+            thumbnail={item.image}
+          />
+          // )
+          ))}
       </div>
     </ul>
   )
 }
-const root = ReactDOM.createRoot(document.querySelector('#root'));
-root.render(<ConstructorElement_ />);
+root.render(<MainElement />);
+
+const BottomElement = () => {
+  return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {data.map((item) => (
+        item.type === 'bun' && (
+          <ConstructorElement
+            key={item.id}
+            isLocked={true}
+            type={item.type}
+            text={item.name}
+            price={item.price}
+            thumbnail={item.image}
+          />
+          )
+          ))}
+      </div>
+
+  )  
+}
+root.render(<BottomElement />);
+
 
 class BurgerConstructor extends React.Component {
   render() {
     return (
       <section className="content_right">
 
-        {/* <ConstructTop /> */}
+        <TopElement />
         {/* scroll-element */}
-        <ConstructorElement_ />
+        <MainElement />
         {/* end */}
-        {/* <ConstructBottom /> */}
+        <BottomElement />
 
         {/* сумма и кнопка */}
         

@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import './ingredients.css';
 
+import data from '../utils/data.js';
+
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const Tab_ = () => {
@@ -30,26 +32,26 @@ class BurgerIngredients extends React.Component {
       <section className="content_left">
         <div className="p40 pb-5"><h1 className="text text_type_main-large">Соберите бургер</h1></div>
         
-        <div className="b">
+        <div className="tab_content">
           <div className="tab_nav"><Tab_ /></div>
 
           <div className="scrollbox custom-scroll">
             <div>
               <h2 className="text text_type_main-medium">Булки</h2>
-              <div className="d">
+              {/* <div className="cardholder">
                 <div></div>
                 <div></div>
-              </div>
+              </div> */}
             </div>
             
             <div>
               <h2 className="text text_type_main-medium">Соусы</h2>
-              <div className="d"></div>
+              {/* <div className="cardholder"></div> */}
             </div>
             
             <div>
               <h2 className="text text_type_main-medium">Начинки</h2>
-              <div className="d"></div>
+              {/* <div className="cardholder"></div> */}
             </div>
             
           </div>

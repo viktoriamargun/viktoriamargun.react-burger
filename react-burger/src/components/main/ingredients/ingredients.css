@@ -18,7 +18,7 @@
   padding: 16px;
 }
 
-.b {
+.tab_content {
   position: relative;
   display: flex;
   flex-direction: column;
