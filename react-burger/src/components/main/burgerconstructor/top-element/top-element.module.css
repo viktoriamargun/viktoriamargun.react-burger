@@ -1,0 +1,7 @@
+.top_element_div {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  padding: 0 0 10px 40px;
+}
