@@ -1,24 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,500&display=swap');
+
 .content_left {
   position: relative;
   display: flex;
   flex-direction: column;
   text-align: left;
-  height: 100%;
+
   padding-top: 40px;
+  width: 600px;
+  height: calc(824px - 40px);
+  flex-shrink: 0;
 }
 .tab_nav {
   position: relative;
   padding-bottom: 40px;
 }
 
-.d {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  padding: 16px;
-}
 
-.b {
+.tab_content {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,7 +31,82 @@
   overflow-x: hidden;
   flex-grow: 1;
   min-height: calc(100% - 120px);
-  height: 300px;
+  height: 275px;
+  width: 600px;
   padding-top: 0;
   transition: 0.6s;
+}
+
+
+
+
+
+
+.ingr-holder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 32px 24px;
+  padding: 0 16px;
+
+}
+
+.col-holder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+align-items: center;
+  width: 47%;
+
+}
+
+.col_img {
+  position: relative;
+  display: flex;
+}
+.col_img > img {
+  position: relative;
+  width: 100%;
+}
+.col_price {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+} 
+.col_price p {
+  color: var(--text-primary-light-standart-text, #F2F2F3);
+  text-align: center;
+  /* desktop/digits small */
+  font-family: Iceland;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+} 
+
+.col_name  {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 48px;
+  } 
+  
+.col_name > p {
+text-align: center;
+color: var(--text-primary-light-standart-text, #F2F2F3);
+text-align: center;
+/* desktop/text */
+font-family: JetBrains Mono;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+} 
+
+
+@media (max-width: 900px) {
+  .content_left {
+    height: calc(784px - 40px);
+  }
 }

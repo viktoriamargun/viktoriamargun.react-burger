@@ -1,0 +1,7 @@
+.bottom_price {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 40px 16px 0 40px;
+}
