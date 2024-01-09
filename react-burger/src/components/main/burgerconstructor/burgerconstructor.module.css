@@ -1,0 +1,14 @@
+.content_right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  height: calc(100vh - 229px);
+  flex-shrink: 0;
+}
+
+
+/* position: relative;
+flex-direction: column;
+width: 600px;
+align-self: center; */

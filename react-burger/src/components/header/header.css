@@ -1,3 +1,7 @@
+@charset "UTF-8";
+:root {
+    --text-dark-grey-secondary-text: #8585AD;
+}
 .header {
     position: relative;
     display: flex;
@@ -30,17 +34,18 @@
     align-items: center;
     justify-content: center; 
 }
-.nav_header > Button {
+.head_btn {
     position: relative;
     display: flex;
-    flex-direction: row;
-
+    align-self: center;
 }
 
 .nav_header > Button > span {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
+    align-self: center;
 }
 
 .profile {
@@ -60,3 +65,22 @@
     align-items: center;
 }
 
+.nav_btn {
+    color: var(--text-primary-light-standart-text, #8585AD);
+    font-family: JetBrains Mono;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    cursor: pointer;
+  
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: 0.6s;
+  }
+  .active {
+    color: var(--text-dark-grey-secondary-text, #F2F2F3);
+    transition: 0.6s;
+  }

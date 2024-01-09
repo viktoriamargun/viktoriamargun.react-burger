@@ -1,0 +1,28 @@
+.col_holder {
+  composes: col_holder from '../card-main/card-main.module.css';
+}
+
+.col_img {
+  composes: col_img from '../card-main/card-main.module.css';
+}
+
+.col_img > img {
+  position: relative;
+  width: 100%;
+}
+
+.col_price {
+  composes: col_price from '../card-main/card-main.module.css';
+} 
+
+.col_price_p {
+  composes: col_price_p from '../card-main/card-main.module.css';
+} 
+
+.col_name  {
+  composes: col_name from '../card-main/card-main.module.css';
+} 
+  
+.col_name_p {
+  composes: col_name_p from '../card-main/card-main.module.css';
+} 

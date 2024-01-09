@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './main.module.css';
+import styles from './app-content.module.css';
 
 import BurgerIngredients from './burgeringredients/burgeringredients';
 import BurgerConstructor from './burgerconstructor/burgerconstructor';
