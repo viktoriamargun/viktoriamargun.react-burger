@@ -1,23 +1,16 @@
-// import React from "react";
-// import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import { constructorType } from '../../utils/types.js';
+
 import styles from './bottom-element.module.css';
-import { data } from '../../utils/data.js';
 
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 
 BottomElement.propTypes = {
-  key: PropTypes.number,
-  _id: PropTypes.number,
-  isLocked: PropTypes.bool,
-  type: PropTypes.string,
-  text: PropTypes.string,
-  price: PropTypes.number,
-  thumbnail: PropTypes.node
-}
+  items: PropTypes.arrayOf(constructorType).isRequired,
+};
 
-function BottomElement() {
-  const bunItems = data.filter((item) => item.type === 'bun');
+function BottomElement({ items }) {
+  const bunItems = items.filter((item) => item.type === 'bun');
   const bunItem = bunItems.length > 1 ? bunItems[1] : null;
 
   return (
