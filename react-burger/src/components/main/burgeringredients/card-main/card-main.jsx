@@ -1,20 +1,37 @@
+import React from 'react';
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types.js';   
-
+import Modal from "../../modal/modal";
+import IngredientDetails from "../../modal/ingredient-details";
 import styles from './card-main.module.css';
-
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 CardMain.propTypes = {
-  items: PropTypes.arrayOf(ingredientType).isRequired,
+  data: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
-export default function CardMain({ items }) {
-  const mainItems = items.map(
+export default function CardMain({data }) {
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const handleItemClick = (itemId) => {
+    setSelectedItemId(itemId);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedItemId(null);
+  };
+
+  const selectedIngredient = data.find(item => item._id === selectedItemId);
+
+  const mainItems = data?.map(
     (item) =>
       item.type === 'main' && (
-        <article key={item._id} className={styles.col_holder}>
-          
+        <article
+          key={item._id}
+          className={styles.col_holder}
+          onClick={() => handleItemClick(item._id)}>
+            
           <Counter count={1} size="default" extraClass="m-1" />
           
           <div className={`${styles.col_img} ${'pl-4'} ${'pr-4'}`}>
@@ -32,5 +49,14 @@ export default function CardMain({ items }) {
         </article>
       )
   );
-  return <>{mainItems}</>;
+  return <>
+  {mainItems}
+  <Modal 
+    isOpen={!!selectedItemId} 
+    handleClose={handleCloseModal}
+    title={"Детали ингредиента"} >
+
+    {selectedIngredient && <IngredientDetails details={selectedIngredient} />}
+  </Modal>  
+  </>;
 }

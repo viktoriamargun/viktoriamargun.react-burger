@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import styles from "./nav-header.module.css";
 import { BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 

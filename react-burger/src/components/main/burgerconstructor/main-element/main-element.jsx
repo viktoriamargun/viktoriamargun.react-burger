@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { constructorType } from '../../utils/types.js';
-
 import styles from './main-element.module.css';
-
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 
 MainElement.propTypes = {
