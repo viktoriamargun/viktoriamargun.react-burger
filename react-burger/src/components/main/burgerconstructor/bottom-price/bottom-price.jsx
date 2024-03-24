@@ -1,36 +1,30 @@
-import { useState } from "react";
 import Modal from "../../modal/modal";
 import OrderDetails from "../../modal/order-details";
-
 import { CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useModal } from '../../hooks/useModal.js';
 import styles from './bottom-price.module.css';
 
-function BottomPrice({ openModal, children }) {
-  const [isOpen, setIsOpen] = useState(false);
 
-  const handleButtonClick = () => {
-    setIsOpen(true);
-    openModal();
-  };
+function BottomPrice() {
 
-  const handleCloseModal = () => {
-    setIsOpen(false);
-  };
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   return (
-    <div className={`${ styles.bottom_price } ${ 'pr-4' }`}>
+    <div className={`${styles.bottom_price} pr-4`}>
 
-      <span className={`${ 'text' } ${ 'text_type_digits-medium' }`} style={{ padding: '0 40px 0 0' }}>
+      <span className={`text text_type_digits-medium pl-0 pt-0 pr-10 pb-0`}>
         {'610'}
-        <CurrencyIcon type="primary" className={ 'pl-2' } />
+        <CurrencyIcon type="primary" className="pl-2" />
       </span>
 
       <>
-        <Button htmlType="button" type="primary" size="large" onClick={handleButtonClick}>Оформить заказ</Button> 
+        <Button htmlType="button" type="primary" size="large" onClick={openModal}>Оформить заказ</Button> 
 
-        <Modal isOpen={isOpen} handleClose={handleCloseModal}>
-          <OrderDetails/>
-        </Modal>
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} handleClose={closeModal} title="">
+            <OrderDetails/>
+          </Modal>
+        )}
       </>
 
     </div>

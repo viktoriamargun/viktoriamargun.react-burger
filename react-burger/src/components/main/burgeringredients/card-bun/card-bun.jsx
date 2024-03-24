@@ -7,19 +7,25 @@ import IngredientDetails from "../../modal/ingredient-details";
 import styles from './card-bun.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { useModal } from '../../hooks/useModal';
+
 CardBun.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 export default function CardBun({ data }) {
+  const { isModalOpen, openModal, closeModal } = useModal();
+
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   const handleItemClick = (itemId, title) => {
     setSelectedItemId(itemId);
+    openModal();
   };
 
   const handleCloseModal = () => {
     setSelectedItemId(null);
+    closeModal();
   };
 
   const selectedIngredient = data.find(item => item._id === selectedItemId);
@@ -52,7 +58,7 @@ export default function CardBun({ data }) {
   return <>
   {mainItems}
   <Modal 
-    isOpen={!!selectedItemId} 
+    isOpen={isModalOpen} 
     handleClose={handleCloseModal}     
     title={"Детали ингредиента"} >
       

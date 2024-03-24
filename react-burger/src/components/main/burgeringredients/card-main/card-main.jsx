@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types.js';   
 import Modal from "../../modal/modal";
@@ -7,19 +6,25 @@ import IngredientDetails from "../../modal/ingredient-details";
 import styles from './card-main.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { useModal } from '../../hooks/useModal';
+
 CardMain.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
-export default function CardMain({data }) {
+export default function CardMain({ data }) {
+  const { isModalOpen, openModal, closeModal } = useModal();
+
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-  const handleItemClick = (itemId) => {
+  const handleItemClick = (itemId, title) => {
     setSelectedItemId(itemId);
+    openModal();
   };
 
   const handleCloseModal = () => {
     setSelectedItemId(null);
+    closeModal();
   };
 
   const selectedIngredient = data.find(item => item._id === selectedItemId);
@@ -52,8 +57,8 @@ export default function CardMain({data }) {
   return <>
   {mainItems}
   <Modal 
-    isOpen={!!selectedItemId} 
-    handleClose={handleCloseModal}
+    isOpen={isModalOpen} 
+    handleClose={handleCloseModal}     
     title={"Детали ингредиента"} >
 
     {selectedIngredient && <IngredientDetails details={selectedIngredient} />}

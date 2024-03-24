@@ -6,19 +6,25 @@ import IngredientDetails from "../../modal/ingredient-details";
 import styles from './card-sauce.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { useModal } from '../../hooks/useModal';
+
 CardSauce.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 export default function CardSauce({ data }) {
+  const { isModalOpen, openModal, closeModal } = useModal();
+
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-  const handleItemClick = (itemId) => {
+  const handleItemClick = (itemId, title) => {
     setSelectedItemId(itemId);
+    openModal();
   };
 
   const handleCloseModal = () => {
     setSelectedItemId(null);
+    closeModal();
   };
 
   const selectedIngredient = data.find(item => item._id === selectedItemId);
@@ -51,7 +57,7 @@ export default function CardSauce({ data }) {
   return <>
   {mainItems}
   <Modal 
-    isOpen={!!selectedItemId} 
+    isOpen={isModalOpen} 
     handleClose={handleCloseModal}     
     title={"Детали ингредиента"} >
       

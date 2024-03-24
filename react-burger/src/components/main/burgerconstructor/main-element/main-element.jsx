@@ -10,7 +10,7 @@ MainElement.propTypes = {
 function MainElement({ items }) {
   return (
     <ul className={`${ styles.main_scr } ${ 'custom-scroll' }`}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div className={`${ styles.element }`}>
         {items.map((item) => (
           item.type !== 'bun' && (
           <ConstructorElement

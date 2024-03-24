@@ -13,3 +13,8 @@
   transition: 0.6s;
 }
 
+.element {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
