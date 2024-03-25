@@ -1,10 +1,8 @@
-
 .content_left {
   position: relative;
   display: flex;
   flex-direction: column;
   text-align: left;
-
   padding-top: 40px;
   width: 600px;
   height: calc(100vh - 162px);
@@ -14,8 +12,6 @@
   position: relative;
   padding-bottom: 40px;
 }
-
-
 .tab_content {
   position: relative;
   display: flex;
@@ -35,22 +31,13 @@
   padding-top: 0;
   transition: 0.6s;
 }
-
-
-
-
-
-
 .ingr_holder {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 32px 24px;
   padding: 0 16px;
-
 }
-
-
 
 
 
