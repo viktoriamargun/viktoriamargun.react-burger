@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 // import { useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types.js';
@@ -8,15 +8,38 @@ import styles from './card-bun.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import { useModal } from '../../hooks/useModal';
+// -----------------------------------------------------------------------------------------------
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../../../../services/ingredients/item-types.js';// Создайте файл ItemTypes.js и определите типы элементов
 
-CardBun.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired,
-};
+export default memo(function CardBun({ data }) {
+  CardBun.propTypes = {
+    data: PropTypes.arrayOf(ingredientType).isRequired,
+  };
+  // ------------------------------------------------------------------------
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.INGREDIENT_BUN,
+    item: { data },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult()
+      if (item && dropResult) {
 
-export default function CardBun({ data }) {
+        console.log(`You dropped ${item.name} into ${dropResult.name}!`);          
+      
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
+    }),
+  }))
+  // const opacity = isDragging ? 0.4 : 1
+  // ------------------------------------------------------------------------
+
   const { isModalOpen, openModal, closeModal } = useModal();
-
   const [selectedItemId, setSelectedItemId] = useState(null);
+
+  // const [counterCount, setCounterCount] = useState(0);
 
   const handleItemClick = (itemId, title) => {
     setSelectedItemId(itemId);
@@ -33,7 +56,11 @@ export default function CardBun({ data }) {
   const mainItems = data?.map(
     (item) => 
       item.type === 'bun' && (
+
         <article
+          ref={drag}
+          draggable={true}
+
           key={item._id} 
           className={styles.col_holder} 
           onClick={() => handleItemClick(item._id)}>
@@ -53,10 +80,12 @@ export default function CardBun({ data }) {
             <p className={`${styles.col_name_p} ${'text'} ${'text_type_main-default'}`}>{item.name}</p>
           </div>
         </article>
+
       )
   );
   return <>
-  {mainItems}
+
+  {mainItems }
   <Modal 
     isOpen={isModalOpen} 
     handleClose={handleCloseModal}     
@@ -65,4 +94,4 @@ export default function CardBun({ data }) {
     {selectedIngredient && <IngredientDetails details={selectedIngredient} />}
   </Modal>
   </>;
-}
+});

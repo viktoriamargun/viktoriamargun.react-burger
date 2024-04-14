@@ -5,3 +5,10 @@
   align-items: center;
   padding: 40px 16px 0 40px;
 }
+
+.span_price {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
