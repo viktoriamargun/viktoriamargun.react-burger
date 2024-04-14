@@ -1,19 +1,41 @@
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types.js';
-
+import Modal from "../../modal/modal";
+import IngredientDetails from "../../modal/ingredient-details";
 import styles from './card-sauce.module.css';
-
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { useModal } from '../../hooks/useModal';
+
 CardSauce.propTypes = {
-  items: PropTypes.arrayOf(ingredientType).isRequired,
+  data: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
-export default function CardSauce({ items }) {
-  const mainItems = items.map(
+export default function CardSauce({ data }) {
+  const { isModalOpen, openModal, closeModal } = useModal();
+
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const handleItemClick = (itemId, title) => {
+    setSelectedItemId(itemId);
+    openModal();
+  };
+
+  const handleCloseModal = () => {
+    setSelectedItemId(null);
+    closeModal();
+  };
+
+  const selectedIngredient = data.find(item => item._id === selectedItemId);
+
+  const mainItems = data?.map(
     (item) =>
       item.type === 'sauce' && (
-        <article key={item._id} className={styles.col_holder}>
+        <article
+         key={item._id} 
+         className={styles.col_holder}
+         onClick={() => handleItemClick(item._id)} >
           
           <Counter count={1} size="default" extraClass="m-1" />
           
@@ -32,5 +54,14 @@ export default function CardSauce({ items }) {
         </article>
       )
   );
-  return <>{mainItems}</>;
+  return <>
+  {mainItems}
+  <Modal 
+    isOpen={isModalOpen} 
+    handleClose={handleCloseModal}     
+    title={"Детали ингредиента"} >
+      
+    {selectedIngredient && <IngredientDetails details={selectedIngredient} />}
+  </Modal>
+  </>;
 }

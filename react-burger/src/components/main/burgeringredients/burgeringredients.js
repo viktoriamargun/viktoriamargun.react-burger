@@ -1,12 +1,10 @@
-import { data } from '../utils/data.js';
 import styles from './burgeringredients.module.css';
-
 import TabL from './nav-tab/nav-tab.jsx';
 import CardBun from './card-bun/card-bun.jsx';
 import CardSauce from './card-sauce/card-sauce.jsx';
 import CardMain from './card-main/card-main.jsx';
 
-function BurgerIngredients() {
+function BurgerIngredients({ ingredients }) {
   return (
     <section className={ styles.content_left }>
       <div className={`${ 'p40' } ${ 'pb-5' }` }>
@@ -18,26 +16,27 @@ function BurgerIngredients() {
         
         <div className={`${ styles.scrollbox } ${ 'custom-scroll' }` }>
           <div id="one">
-            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' }` } style={{ padding: '0 0 24px 0' }}>Булки</h2>
+            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' } ${ 'pl-0' } ${ 'pt-0' } ${ 'pr-0' } ${ 'pb-6' }` }>Булки</h2>
             <div className={ styles.ingr_holder }>  
-              <CardBun items={data} />
+              <CardBun data={ ingredients } />
             </div>
           </div>
           
           <div id="two">
-            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' }` } style={{ padding: '40px 0 24px 0' }}>Соусы</h2>
+            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' } ${ 'pl-0' } ${ 'pt-10' } ${ 'pr-0' } ${ 'pb-6' }` }>Соусы</h2>
             <div className={ styles.ingr_holder }>  
-              <CardSauce items={data} />
+              <CardSauce data={ ingredients } />
             </div>
           </div>
           
           <div  id="three">
-            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' }` } style={{ padding: '40px 0 24px 0' }}>Начинки</h2>
+            <h2 className={` ${ 'text' } ${ 'text_type_main-medium' } ${ 'pl-0' } ${ 'pt-10' } ${ 'pr-0' } ${ 'pb-6' }` }>Начинки</h2>
             <div className={ styles.ingr_holder }>  
-              <CardMain items={data} />
+              <CardMain data={ ingredients } />
             </div>
           </div>
         </div>
+        
       </div>
     </section>
   )
