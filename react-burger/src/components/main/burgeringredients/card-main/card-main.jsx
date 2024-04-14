@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types.js';   
 import Modal from "../../modal/modal";
@@ -7,14 +7,35 @@ import styles from './card-main.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import { useModal } from '../../hooks/useModal';
+//-----------------------------------------------------------------------------------------------
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../../../../services/ingredients/item-types.js';// Создайте файл ItemTypes.js и определите типы элементов
 
+export default memo(function CardMain({ data }) {
 CardMain.propTypes = {
   data: PropTypes.arrayOf(ingredientType).isRequired,
 };
+  // ------------------------------------------------------------------------
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.INGREDIENT_MAIN,
+    item: { data },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult()
+      if (item && dropResult) {
 
-export default function CardMain({ data }) {
+        alert(`You dropped ${item.name} into ${dropResult.name}!`)
+      
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
+    }),
+  }))
+  // const opacity = isDragging ? 0.4 : 1
+  // ------------------------------------------------------------------------
+
   const { isModalOpen, openModal, closeModal } = useModal();
-
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   const handleItemClick = (itemId, title) => {
@@ -33,6 +54,9 @@ export default function CardMain({ data }) {
     (item) =>
       item.type === 'main' && (
         <article
+        ref={drag}
+        draggable={true}
+
           key={item._id}
           className={styles.col_holder}
           onClick={() => handleItemClick(item._id)}>
@@ -64,4 +88,4 @@ export default function CardMain({ data }) {
     {selectedIngredient && <IngredientDetails details={selectedIngredient} />}
   </Modal>  
   </>;
-}
+});

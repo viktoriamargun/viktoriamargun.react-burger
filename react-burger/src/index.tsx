@@ -2,7 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.module.css';
 import App from './components/app/app.js';
+// import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+// import rootReducer from './services/root-reducer.js';
+
+import store from './services/store.js';
 import reportWebVitals from './reportWebVitals';
+
+// const store = configureStore({
+//   reducer: rootReducer,
+// });
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,7 +19,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+
+    <Provider store={store}>
+      <App />
+    </Provider>
+    
   </React.StrictMode>
 );
 

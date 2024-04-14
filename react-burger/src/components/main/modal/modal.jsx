@@ -28,7 +28,7 @@ function Modal({ isOpen, handleClose, children, title }) {
     (
     <>
       <div className={`${ styles.modal} ${ 'pl-0' } ${ 'pt-0' } ${ 'pr-0' } ${ 'pb-0' }`}>
-        <div className={`${ styles.modal_header}  ${ 'pl-10' } ${ 'pt-10' } ${ 'pr-10' } ${ 'pb-0' }`}>
+        <div className={`${ styles.modal_header} ${ 'pl-10' } ${ 'pt-10' } ${ 'pr-10' } ${ 'pb-0' }`}>
           <div className={ styles.modal_header_h1 }>            
             <h1 className={` ${ 'text' } ${ 'text_type_main-large' } ${ 'pl-0' } ${ 'pt-0' } ${ 'pr-0' } ${ 'pb-0' }` }>{title}</h1>          
           </div>

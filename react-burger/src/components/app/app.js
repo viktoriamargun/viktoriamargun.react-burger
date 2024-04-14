@@ -1,34 +1,42 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchIngredients } from '../../services/ingredients/fetch-data.js';
+// import { useEffect, useState } from "react";
 import './app.module.css';
 import AppHeader from '../header/header.js';
 import AppContent from '../main/app-content.js';
 
-const dataApi = "https://norma.nomoreparties.space/api/ingredients";
 
 function App() {
-  const [ingredients, setIngredients] = useState([]);
+  // const [ingredients, setIngredients] = useState([]);
+
+  // useEffect(() => {
+  //   fetch(dataApi)
+  //   .then(response => {
+  //     if (response.ok) {
+  //       return response.json();
+  //     } else {
+  //       throw new Error();
+  //     }
+  //   })
+  //   .then(data => {
+  //     setIngredients(data.data);
+  //   })
+  //   .catch(error => {
+  //     console.error('Произошла ошибка:', error);
+  //   });
+  // }, []);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(dataApi)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error();
-      }
-    })
-    .then(data => {
-      setIngredients(data.data);
-    })
-    .catch(error => {
-      console.error('Произошла ошибка:', error);
-    });
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);  
 
   return (
     <>
       <AppHeader />
-      <AppContent ingredients={ingredients} />
+      <AppContent />
     </>
   );
 }
