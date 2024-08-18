@@ -10,7 +10,7 @@
 }
 
 .col_holder:hover {
-  border: 1px solid #4c4cff;
+  /* border: 1px solid #4c4cff; */
   border-radius: 15px;
   transition: 0.3s;  
 }
