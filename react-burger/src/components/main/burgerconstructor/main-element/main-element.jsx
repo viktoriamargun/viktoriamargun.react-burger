@@ -6,25 +6,18 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../../../services/ingredients/item-types.js';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { addIngredient, selectIngredientsCount, moveIngredient, removeIngredient } from '../../../../services/constructor/burgerconstructor-slice.js';
+import {
+  addIngredient,
+  selectIngredientsCount,
+  moveIngredient,
+  removeIngredient,
+  burgerConstructorSlice
+} from '../../../../services/constructor/slice.js';
 import SortableElement from './sortable-element.jsx';
-
-MainElement.propTypes = {
-  items: PropTypes.arrayOf(constructorType).isRequired,
-};
 
 function MainElement({ items }) {
   const dispatch = useDispatch();
-  const ingredients = useSelector(state => state.burgerConstructor.ingredients);
-  const ingredientsCount = useSelector(selectIngredientsCount);
-
-  const findCard = (id) => {
-    const card = ingredients.find((c) => c._id === id);
-    return {
-      card,
-      index: ingredients.indexOf(card),
-    };
-  };
+  const ingredients = useSelector(burgerConstructorSlice.selectors.ingredients);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: [ItemTypes.INGREDIENT_MAIN, ItemTypes.INGREDIENT_SAUCE],
@@ -35,7 +28,7 @@ function MainElement({ items }) {
     }),
   });
 
-  const listHeight = ingredientsCount > 1 
+  const listHeight = ingredients.length > 1
     ? { height: 'auto', maxHeight: '350px' }
     : { height: '80px' };
 
@@ -61,12 +54,11 @@ const moveCardHandler = useCallback((dragIndex, hoverIndex) => {
       {ingredients.length > 0 ? (
         ingredients.map((item, index) => (
           <SortableElement
-            key={item._id}
+            key={item.key}
             item={item}
             index={index}
             moveCard={moveCardHandler}
-            findCard={findCard}
-            onRemove={() => handleRemove(item._id)}          
+            onRemove={() => handleRemove(item.key)}
           />
         ))
       ) : (

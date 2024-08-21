@@ -11,7 +11,7 @@ Modal.propTypes = {
   handleClose: PropTypes.func.isRequired,
 };
 
-function Modal({ isOpen, handleClose, children, title }) {
+function Modal({ handleClose, children, title }) {
   useEffect(() => {
     const closeOnEscapeKey = (e) => (e.key === "Escape" ? handleClose() : null);
     document.body.addEventListener("keydown", closeOnEscapeKey);
@@ -19,10 +19,6 @@ function Modal({ isOpen, handleClose, children, title }) {
       document.body.removeEventListener("keydown", closeOnEscapeKey);
     };
   }, [handleClose]);
-
-  if (!isOpen) {
-    return null;
-  }
 
   return ReactDOM.createPortal(
     (

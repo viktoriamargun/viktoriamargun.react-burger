@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import styles from './bottom-element.module.css';
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -6,8 +5,7 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../../../services/ingredients/item-types.js';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBun } from '../../../../services/constructor/burgerconstructor-slice.js';
-import { decrementIngredient, incrementIngredient } from '../../../../services/constructor/ingredients-slice.js';
+import { addBun } from '../../../../services/constructor/slice.js';
 
 BottomElement.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -20,11 +18,7 @@ function BottomElement() {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.INGREDIENT_BUN,
     drop: (item) => {
-      if (bun) {
-        dispatch(incrementIngredient(bun._id));
-      }
       dispatch(addBun(item));
-      dispatch(decrementIngredient(item._id));
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

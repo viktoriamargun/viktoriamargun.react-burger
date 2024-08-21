@@ -4,12 +4,17 @@ import { ItemTypes } from '../../../../services/ingredients/item-types.js';
 import styles from './card-bun.module.css';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from 'react-redux';
+import {burgerConstructorSlice} from "../../../../services/constructor/slice";
 
-function DraggableCard({ data, onClick }) {
+function DraggableCard({ data, onClick, count }) {
   // const constructorIngredients = useSelector(state => state.burgerConstructor);
   // const bunCount = constructorIngredients.bun ? (constructorIngredients.bun._id === data._id ? 2 : 0) : 0;
-  const ingredients = useSelector(state => state.ingredients_count);
-  const ingredientCount = ingredients[data._id]?.count || 0;
+  // const ingredients = useSelector(state => state.ingredients_count);
+  // const ingredientCount = ingredients[data._id]?.count || 0;
+
+  const handleClick = () => {
+      onClick(data);
+  }
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.INGREDIENT_BUN,
@@ -37,10 +42,10 @@ function DraggableCard({ data, onClick }) {
       ref={drag}
       key={data._id}
       className={styles.col_holder}
-      onClick={onClick}
+      onClick={handleClick}
       style={{ opacity: isDragging ? 0.5 : 1 }}>
 
-      {ingredientCount > 0 && <Counter count={ingredientCount} size="default" extraClass="m-1" />}
+      {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
       <div className={`${styles.col_img} ${'pl-4'} ${'pr-4'}`}>
         <img src={data.image_large} alt={data.name} />
       </div>

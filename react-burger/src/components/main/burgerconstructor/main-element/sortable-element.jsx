@@ -9,7 +9,7 @@ const SortableElement = memo(({ item, index, moveCard, onRemove }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.INGREDIENT_MAIN,
+    type: "sort",
     item: { id: item._id, index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -17,7 +17,7 @@ const SortableElement = memo(({ item, index, moveCard, onRemove }) => {
   });
 
   const [, drop] = useDrop({
-    accept: [ItemTypes.INGREDIENT_MAIN, ItemTypes.INGREDIENT_SAUCE],
+    accept: "sort",
     hover(draggedItem, monitor) {
       if (!ref.current) return;
 

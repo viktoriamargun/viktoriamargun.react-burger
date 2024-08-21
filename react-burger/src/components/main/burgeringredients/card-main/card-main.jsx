@@ -1,47 +1,31 @@
-import React, { useState, memo } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types.js';   
-import Modal from "../../modal/modal";
-import IngredientDetails from "../../modal/ingredient-details";
-import DraggableCardMain from '../card-main/draggable-card-main.jsx';
+import { ingredientType } from '../../utils/types.js';
+import DraggableCardMain from './draggable-card-main.jsx';
+import {useSelector} from "react-redux";
+import {burgerConstructorSlice} from "../../../../services/constructor/slice";
 
-export default memo(function CardMain({ data }) {
+export const CardMain = ({data, onClick}) => {
+    const stat = useSelector(burgerConstructorSlice.selectors.statistics);
+
+    return (
+        <>
+            {data?.map(
+                (item) =>
+                    item.type === 'main' && (
+                        <DraggableCardMain
+                            key={item._id}
+                            data={item}
+                            onClick={onClick}
+                            count={stat[item._id] ?? 0}
+                        />
+                    )
+            )}
+        </>
+    );
+};
+
 CardMain.propTypes = {
-  data: PropTypes.arrayOf(ingredientType).isRequired,
+    data: PropTypes.arrayOf(ingredientType).isRequired,
+    onClick: PropTypes.func.isRequired,
 };
-
-const [selectedItemId, setSelectedItemId] = useState(null);
-
-const handleItemClick = (itemId, title) => {
-  setSelectedItemId(itemId);
-};
-
-const handleCloseModal = () => {
-  setSelectedItemId(null);
-};
-
-const selectedIngredient = data.find(item => item._id === selectedItemId);
-
-  const mainItems = data?.map(
-    (item) =>
-      item.type === 'main' && (
-        <DraggableCardMain 
-          key={item._id} 
-          data={item} 
-          onClick={() => handleItemClick(item._id)}
-        /> 
-      )
-  );
-  return (
-    <>
-      {mainItems}
-      <Modal
-        isOpen={!!selectedItemId} 
-        handleClose={handleCloseModal}     
-        title={"Детали ингредиента"} 
-      >
-        {selectedIngredient && <IngredientDetails details={selectedIngredient} />}
-      </Modal>
-    </>
-  );
-});
