@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./modal-offer.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-// import done from "./images/done.svg";
 
 function ModalOffer() {
   const [setVisible] = React.useState(true);

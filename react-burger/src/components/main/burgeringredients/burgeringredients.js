@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useInView} from 'react-intersection-observer';
 import styles from './burgeringredients.module.css';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,7 +17,6 @@ import {
 } from "../../../services/selectedingredient/slice";
 
 function BurgerIngredients() {
-    const ingredients = useSelector(ingredientsSlice.selectors.ingredients);
     const dispatch = useDispatch();
     const [currentTab, setCurrentTab] = useState("one");
     const selectedIngredient = useSelector(selectedIngredientSlice.selectors.selectedIngredient);
@@ -28,17 +27,10 @@ function BurgerIngredients() {
     const handleTabClick = (tab) => {
         const element = document.getElementById(tab);
         if (element) {
-            const top = element.offsetTop;
             setCurrentTab(tab);
             element.scrollIntoView({behavior: "smooth", block: "start"});
         }
     }
-
-    const sectionRefs = {
-        one: useRef(null),
-        two: useRef(null),
-        three: useRef(null),
-    };
 
     const [refOne, inViewOne] = useInView({threshold: 1});
     const [refTwo, inViewTwo] = useInView({threshold: 0.9});
@@ -57,8 +49,9 @@ function BurgerIngredients() {
     }, [inViewOne, inViewTwo, inViewThree, dispatch]);
 
     const setSelectedIngredient = useCallback((ingredient) => {
-        dispatch(selectIngredient(ingredient))
-    }, []);
+        dispatch(selectIngredient(ingredient));
+    }, [dispatch]);
+    
 
     return (
         <section className={styles.content_left}>

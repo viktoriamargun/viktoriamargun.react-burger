@@ -1,19 +1,26 @@
-const dataApi = "https://norma.nomoreparties.space/api/ingredients";
+export const BASE_URL = "https://norma.nomoreparties.space/api/";
 
-const checkResponse = (response) => {
-    const body = response.json();
-
-    if (response.ok) {
-        return body;
-    } else {
-        return body
-            .then(error => {
-                error.httpResponseCode = response.status;
-                return Promise.reject(error);
-            });
-    }
-}
-
-export const getIngredients = ()  => {
-    return fetch(dataApi).then(checkResponse);
+// Функция для проверки ответа на `ok`
+const checkResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
 };
+
+// Функция для проверки `success` в ответе
+const checkSuccess = (res) => {
+  if (res && res.success) {
+    return res;
+  }
+  return Promise.reject(`Ответ не success: ${res}`);
+};
+
+// Универсальная функция для выполнения запросов
+export const request = (endpoint, options) => {
+  return fetch(`${BASE_URL}${endpoint}`, options)
+    .then(checkResponse)
+    .then(checkSuccess);
+};
+
+export const getIngredients = () => request("ingredients");

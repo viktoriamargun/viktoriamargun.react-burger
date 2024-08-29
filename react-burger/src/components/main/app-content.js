@@ -8,10 +8,9 @@ function AppContent({ ingredients }) {
     return (
       <main className={ styles.content }>
         <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients ingredients={ ingredients }/>
-          <BurgerConstructor ingredients={ ingredients }/>          
+          <BurgerIngredients />
+          <BurgerConstructor />          
         </DndProvider>
-        <div id="react-modals"></div>
       </main>
     );
   }

@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../../modal/modal";
 import OrderDetails from "../../modal/order-details";
-import { useModal } from '../../hooks/useModal.js';
+import { useModal } from '../../hooks/useModal';
 import styles from './bottom-price.module.css';
 import { burgerConstructorSlice } from "../../../../services/constructor/slice";
+import { sendOrder } from '../../../../services/orders/actions';
 
 function BottomPrice() {
+  const dispatch = useDispatch();
   const { isModalOpen, openModal, closeModal } = useModal();
   const bun = useSelector(burgerConstructorSlice.selectors.bun);
   const ingredients = useSelector(burgerConstructorSlice.selectors.ingredients);
@@ -22,43 +24,18 @@ function BottomPrice() {
     return bunPrice + ingredientsPrice;
   }, [bun, ingredients]);
 
-  const sendOrder = async (ingredientsIds) => {
-    try {
-      const response = await fetch('https://norma.nomoreparties.space/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ingredients: ingredientsIds
-        }),
-      });
-      
-      const data = await response.json();
-
-      if (data.success) {
-        return data.order.number;
-      } else {
-        throw new Error('Что-то пошло не так...');
-      }
-    } catch (error) {
-      console.error('Ошибка при отправке заказа:', error);
-      return null;
-    }
-  };
-
   const handleOrderClick = async () => {
     if (orderNumber) {
       openModal();
     } else {
       const ingredientsIds = [bun?._id, ...ingredients.map(ingredient => ingredient._id)];
-      const newOrderNumber = await sendOrder(ingredientsIds);
+      const resultAction = await dispatch(sendOrder(ingredientsIds)); 
 
-      if (newOrderNumber) {
-        setOrderNumber(newOrderNumber);
+      if (sendOrder.fulfilled.match(resultAction)) {
+        setOrderNumber(resultAction.payload);
         openModal();
       } else {
-        console.error('Не удалось оформить заказ');
+        console.error('Не удалось оформить заказ', resultAction.payload);
       }
     }
   };
@@ -86,4 +63,3 @@ function BottomPrice() {
 }
 
 export default BottomPrice;
-
