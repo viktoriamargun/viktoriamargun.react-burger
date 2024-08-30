@@ -42,7 +42,7 @@ function Modal({ handleClose, children, title }) {
      <ModalOverlay handleClose={handleClose}/>     
     </>
     ),
-    document.getElementById("root")
+    document.getElementById("modals")
   );
 }
 export default Modal;
