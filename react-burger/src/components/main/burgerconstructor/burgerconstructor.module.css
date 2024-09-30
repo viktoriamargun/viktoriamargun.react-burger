@@ -4,6 +4,7 @@
   flex-direction: column;
   width: 600px;
   height: calc(100vh - 229px);
+  margin: 0 0 0 40px;
   flex-shrink: 0;
 }
 

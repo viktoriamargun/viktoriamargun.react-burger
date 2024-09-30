@@ -11,7 +11,7 @@ Modal.propTypes = {
   handleClose: PropTypes.func.isRequired,
 };
 
-function Modal({ isOpen, handleClose, children, title }) {
+function Modal({ handleClose, children, title }) {
   useEffect(() => {
     const closeOnEscapeKey = (e) => (e.key === "Escape" ? handleClose() : null);
     document.body.addEventListener("keydown", closeOnEscapeKey);
@@ -20,15 +20,11 @@ function Modal({ isOpen, handleClose, children, title }) {
     };
   }, [handleClose]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   return ReactDOM.createPortal(
     (
     <>
       <div className={`${ styles.modal} ${ 'pl-0' } ${ 'pt-0' } ${ 'pr-0' } ${ 'pb-0' }`}>
-        <div className={`${ styles.modal_header}  ${ 'pl-10' } ${ 'pt-10' } ${ 'pr-10' } ${ 'pb-0' }`}>
+        <div className={`${ styles.modal_header} ${ 'pl-10' } ${ 'pt-10' } ${ 'pr-10' } ${ 'pb-0' }`}>
           <div className={ styles.modal_header_h1 }>            
             <h1 className={` ${ 'text' } ${ 'text_type_main-large' } ${ 'pl-0' } ${ 'pt-0' } ${ 'pr-0' } ${ 'pb-0' }` }>{title}</h1>          
           </div>
@@ -46,7 +42,7 @@ function Modal({ isOpen, handleClose, children, title }) {
      <ModalOverlay handleClose={handleClose}/>     
     </>
     ),
-    document.getElementById("react-modals")
+    document.getElementById("modals")
   );
 }
 export default Modal;

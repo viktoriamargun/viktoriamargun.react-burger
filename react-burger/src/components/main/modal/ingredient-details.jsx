@@ -1,6 +1,6 @@
 import styles from "./ingredient-details.module.css";
 import PropTypes from 'prop-types';
-import { ingredientdetailsType } from '../../main/utils/types.js';
+import { ingredientdetailsType } from '../utils/types.js';
 
 IngredientDetails.propTypes = {
   details: PropTypes.shape({

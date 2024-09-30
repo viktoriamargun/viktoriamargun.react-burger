@@ -1,34 +1,33 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import './app.module.css';
 import AppHeader from '../header/header.js';
 import AppContent from '../main/app-content.js';
+import {ingredientsSlice} from "../../services/ingredients/slice";
+import {fetchIngredients} from "../../services/ingredients/actions";
 
-const dataApi = "https://norma.nomoreparties.space/api/ingredients";
 
 function App() {
-  const [ingredients, setIngredients] = useState([]);
+  const {loading, error, ingredients} = useSelector(ingredientsSlice.selectors.state)
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(dataApi)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error();
-      }
-    })
-    .then(data => {
-      setIngredients(data.data);
-    })
-    .catch(error => {
-      console.error('Произошла ошибка:', error);
-    });
+    dispatch(fetchIngredients());
   }, []);
 
   return (
     <>
       <AppHeader />
-      <AppContent ingredients={ingredients} />
+        {loading ? (
+            <p>Загрузка...</p>
+        ) : error ? (
+            <p>Ошибка: {error.message}</p>
+        ) : ingredients.length ? (
+            <AppContent />
+        ) : (
+            <p>Нет данных</p>
+        )}
     </>
   );
 }
