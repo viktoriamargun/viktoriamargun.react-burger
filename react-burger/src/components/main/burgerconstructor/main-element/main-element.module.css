@@ -4,10 +4,16 @@
   flex-direction: column;  
   overflow-y: scroll;
   overflow-x: hidden;
-  flex-grow: 1;
+  /* flex-grow: 1; */
+
   /* min-height: calc(100% - 120px); */
   /* height: 275px; */
-  height: 260px;
+
+  /* height: 260px; */
+  /* height: 80px; */
+  /* max-height: 600px; */
+  gap: 10px;
+
   padding-top: 0;
   margin: 0;
   transition: 0.6s;
@@ -17,4 +23,49 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.main_constructor_element {
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+
+  border-radius: var(--common-border-radius-s);
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: #1C1C21;
+  color: #F2F2F3;
+
+  max-width: 536px;
+  width: 100%;
+  min-height: 80px;
+  font-family: 'Jet Brains Mono';
+  font-size: 16px;
+  line-height: 24px;
+  color: #F2F2F3;
+  flex-grow: 1;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0);
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.p_constructor_element {
+  composes: p_constructor_element from '../top-element/top-element.module.css';
+}
+
+/* .main_constructor_element:hover {
+  border: 1px dotted #4c4cff;
+  transition: 0.3s;  
+} */
+
+.isActive {
+  background: var(--background-element);
+  border: 1px solid #4c4cff;
+  transition: 0.3s;  
+}
+
+.canDrop {
+  border: 1px solid #4c4cff;
+  transition: 0.3s;  
 }

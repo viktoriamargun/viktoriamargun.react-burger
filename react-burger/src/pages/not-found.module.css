@@ -1,0 +1,11 @@
+.contentbody {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 82px);
+  margin: 0;
+  padding: 0;
+}
+
+.contentbody > img {
+
+}

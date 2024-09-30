@@ -1,11 +1,14 @@
 import styles from "./order-details.module.css";
 import svg from '../../../images/done.svg';
+import PropTypes from 'prop-types';
 
-function OrderDetails() {  
+function OrderDetails({ orderNumber }) {  
   return (
     <div className={`${ styles.order_modal_content } ${ 'pt-0' } ${ 'pr-30' } ${ 'pb-30' } ${ 'pl-30' }`}>
       <div className={`${ styles.id_order } ${'pt-10'}`}> 
-        <p className={`${ styles.id_order_number } ${ 'text' } ${ 'text_type_digits-large' }`} >{Math.floor(Math.random() * (99999 - 10000 + 1)) + 99999}</p>
+        <p className={`${ styles.id_order_number } ${ 'text' } ${ 'text_type_digits-large' }`} >
+          {orderNumber}
+        </p>
         <p className={`${ styles.id_order_p } ${ 'pt-8' }`}>идентификатор заказа</p>
       </div>
       <div className={`${ styles.modal_img} ${ 'pt-15' } ${ 'pb-15' }`}>
@@ -18,4 +21,9 @@ function OrderDetails() {
     </div>
   )
 }
+
+OrderDetails.propTypes = {
+  orderNumber: PropTypes.number.isRequired,
+};
+
 export default OrderDetails;

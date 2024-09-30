@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { Link } from 'react-router-dom';
 import styles from "./profile.module.css";
 import { ProfileIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -20,12 +21,15 @@ function Profile() {
     <nav className={ styles.profile }
     onMouseEnter={handleMouseEnter} 
     onMouseLeave={handleMouseLeave}>
-      <a href="#" className={ styles.navbtn } style={buttonType1}>
+      <Link 
+        to='/account/profile'
+        className={ styles.navbtn } 
+        style={buttonType1}>
         <span className={`${ 'pr-1' }`}>
           <ProfileIcon type={buttonType2}/>
         </span>
         <p className={`${ 'text' } ${ 'text_type_main-small' }`}>Личный кабинет</p>
-      </a>
+      </Link>  
     </nav>
   );
 }

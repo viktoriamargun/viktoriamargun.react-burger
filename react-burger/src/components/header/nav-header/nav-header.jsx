@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { Link } from 'react-router-dom';
 import styles from "./nav-header.module.css";
 import { BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -32,12 +33,14 @@ function NavHeaderBtns() {
             onMouseEnter={handleMouseEnter} 
             onMouseLeave={handleMouseLeave}>
             
-            <a href='#' className={ styles.navbtn } style={{color: '#F2F2F3',}}>
+            <Link
+            to='/'
+            className={ styles.navbtn } style={{color: '#F2F2F3',}}>
               <span className={`${ 'pr-1' }`}>
                 <BurgerIcon type={buttonType0}/>
               </span>
               Конструктор
-            </a>
+            </Link> 
 
           </div>
 
@@ -45,12 +48,14 @@ function NavHeaderBtns() {
             onMouseEnter={handleMouseEnter1} 
             onMouseLeave={handleMouseLeave1}>
             
-            <a href="#" className={ styles.navbtn } style={buttonType2}>
+            <Link 
+            to='/profile/orders'
+            className={ styles.navbtn } style={buttonType2}>
               <span className={`${ 'pr-1' }`}>
                 <ListIcon type={buttonType3}/>
               </span>
               Лента заказов
-            </a>
+            </Link>
 
           </div>
 

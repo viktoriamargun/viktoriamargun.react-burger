@@ -1,20 +1,17 @@
 import React from "react";
-import ReactDOM from 'react-dom';
 import styles from './nav-tab.module.css';
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 
-
-function TabL() {
-  const [current, setCurrent] = React.useState('one')
+function TabL({ currentTab, setCurrentTab, handleTabClick }) {
   return (
     <div className={`${ styles.navtab }`}>
-      <Tab value="one" active={current === 'one'} onClick={setCurrent}>
+      <Tab value="one" active={currentTab === 'one'} onClick={() => handleTabClick('one')}>
         Булки
       </Tab>
-      <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+      <Tab value="two" active={currentTab === 'two'} onClick={() => handleTabClick('two')}>
         Соусы
       </Tab>
-      <Tab value="three" active={current === 'three'} onClick={setCurrent}>
+      <Tab value="three" active={currentTab === 'three'} onClick={() => handleTabClick('three')}>
         Начинки
       </Tab>
     </div>
