@@ -8,8 +8,6 @@ import {burgerConstructorSlice} from "../../../../services/constructor/slice";
 export const CardSauce = ({data, onClick}) => {
     const stat = useSelector(burgerConstructorSlice.selectors.statistics);
 
-    console.log(stat);
-
     return (
       <>
         {data?.map(

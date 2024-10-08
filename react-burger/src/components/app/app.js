@@ -5,8 +5,8 @@ import './app.module.css';
 import AppHeader from '../header/header.js';
 import AppContent from '../main/app-content.js';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ProtectedRouteElement } from '../protected-route';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import ProtectedRoute from '../protected-route';
 
 import RegisterPage from '../../pages/registration/registration';
 import SignIn from '../../pages/registration/sign-in';
@@ -19,20 +19,26 @@ import NotFound404 from '../../pages/notfound404';
 import {ingredientsSlice} from "../../services/ingredients/slice";
 import {fetchIngredients} from "../../services/ingredients/actions";
 
+import Modal from '../../components/main/modal/modal';
+import Ingredient from "../../components/main/modal/ingredient";
+
+
 function App() {
-  const {loading, error, ingredients} = useSelector(ingredientsSlice.selectors.state)
+  const {loading, error, ingredients} = useSelector(ingredientsSlice.selectors.state);
+  const navigate = useNavigate();
+  const currentLocation = useLocation();
+  const backgroundLocation = currentLocation.state?.backgroundLocation;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchIngredients());
-  }, []);
+  }, [dispatch]); 
 
   return (
-    <Router>
+    <>
       <AppHeader />
-      <Routes>
-      {/* Открытые маршруты */}
+      <Routes location={backgroundLocation || currentLocation}>
         <Route 
             path="/" 
             element={
@@ -47,30 +53,39 @@ function App() {
               )
             } 
           />
-        
+
+
+{/* ----------------------------------------------------------------------------------------------- */}
+        <Route path="/login" element={<ProtectedRoute anonymous={true}><SignIn /></ProtectedRoute>} />
+        <Route path="/register" element={<ProtectedRoute anonymous={true}><RegisterPage /></ProtectedRoute>} />
+        <Route path="/register/forgot-password" element={<ProtectedRoute anonymous={true}><ForgotPassword /></ProtectedRoute>} />
+        <Route path="/reset-password" element={<ProtectedRoute anonymous={true}><ResetPassword /></ProtectedRoute>} />
+
+        <Route path="/account/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
         <Route path="/ingredients/:id" element={<FullPage />} />
 
-               
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/register/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />        
-        <Route path="/account/profile" element={<Profile />} />            
-
-
-{/* <Route path="/login" element={<ProtectedRouteElement element={<SignIn />} />} />
-    <Route path="/register" element={<ProtectedRouteElement element={<RegisterPage />} />} />
-    <Route path="/reset-password" element={<ProtectedRouteElement element={<ResetPassword />} />} />
-    <Route path="/register/forgot-password" element={<ForgotPassword />} /> 
-*/}
-
-    
-    {/* Защищенные маршруты */}
-        <Route path="/account/profile" element={<ProtectedRouteElement element={<Profile />} />} /> 
-
         <Route path="*" element={<NotFound404 />} />
+{/* ----------------------------------------------------------------------------------------------- */}
+
       </Routes>
-    </Router>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <Modal
+                title={"Детали ингредиента"}
+                handleClose={() => navigate(-1)}
+              >
+                <Ingredient />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+    </>
   );
 }
 

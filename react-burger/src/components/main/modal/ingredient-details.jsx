@@ -10,7 +10,9 @@ IngredientDetails.propTypes = {
 };
 
 function IngredientDetails({ details, children }) {
-  const isRequired = details.isRequired !== undefined ? details.isRequired : true;
+  const isRequired = details?.isRequired !== undefined ? details.isRequired : true;
+if (!details) return null; // Или показывать загрузку
+
 
   return (
     <>

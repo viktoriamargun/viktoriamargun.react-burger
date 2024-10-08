@@ -5,6 +5,7 @@ const initialState = {
   user: {},
   accessToken: null,
   refreshToken: null,
+  isLoggedIn: false,
   status: 'idle',
   error: null,
   loading: false,
@@ -20,59 +21,53 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
     console.log('Отправка запроса с данными:', userData);
+    const response = await fetch('https://norma.nomoreparties.space/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
     
-    try {
-      const response = await fetch('https://norma.nomoreparties.space/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+    const responseBody = await response.json();
+    console.log('Ответ сервера:', responseBody);
 
-      const responseBody = await response.json();
-      console.log('Ответ сервера:', responseBody);
-
-      if (!response.ok) {
-        return rejectWithValue(`Ошибка ${response.status}: ${responseBody.message || 'Network response was not ok'}`);
-      }
-
-      if (!responseBody.success) {
-        return rejectWithValue(`Ошибка: ${responseBody.message || 'Регистрация не удалась'}`);
-      }
-
-      return responseBody;
-
-    } catch (error) {
-      return rejectWithValue(error.message || 'Неизвестная ошибка');
+    if (!response.ok) {
+      return rejectWithValue(`Ошибка ${response.status}: ${responseBody.message || 'Network response was not ok'}`);
     }
+
+    if (!responseBody.success) {
+      return rejectWithValue(`Ошибка: ${responseBody.message || 'Регистрация не удалась'}`);
+    }
+
+    return responseBody;
   }
 );
 
 // Авторизация
 export const loginUser = createAsyncThunk('auth/login', async ({ email, password }, { rejectWithValue }) => {
-  try {
-    const response = await fetch('https://norma.nomoreparties.space/api/auth/login', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) throw new Error('Ошибка авторизации');
-    const data = await response.json();
+  const response = await fetch('https://norma.nomoreparties.space/api/auth/login', {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify({ email, password }),
+  });
 
-    saveTokensToCookies(data.accessToken, data.refreshToken);
-
-    return data;
-  } catch (error) {
-    return rejectWithValue(error.message);
+  if (!response.ok) {
+    return rejectWithValue('Ошибка авторизации');
   }
+
+  const data = await response.json();
+
+  saveTokensToCookies(data.accessToken, data.refreshToken);
+
+  return data;
 });
 
 
@@ -82,24 +77,25 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { reject
   if (!refreshToken) {
     return rejectWithValue('Refresh token not found');
   }
-  try {
-    const response = await fetch('https://norma.nomoreparties.space/api/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ token: refreshToken }),
-    });
-    if (!response.ok) {
-      return rejectWithValue('Ошибка выхода из системы');
-    }
-    deleteCookie('accessToken');
-    deleteCookie('refreshToken');
-    return response.json();
-  } catch (error) {
-    return rejectWithValue(error.message);
+
+  const response = await fetch('https://norma.nomoreparties.space/api/auth/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: refreshToken }),
+  });
+
+  if (!response.ok) {
+    return rejectWithValue('Ошибка выхода из системы');
   }
+
+  deleteCookie('accessToken');
+  deleteCookie('refreshToken');
+
+  return response.json();
 });
+
 
 
 // Получение данных пользователя с обработкой ошибки 403
@@ -107,63 +103,59 @@ export const fetchUserData = createAsyncThunk(
   'auth/fetchUserData',
   async (_, { dispatch, rejectWithValue }) => {
     const accessToken = getCookie('accessToken');
-    
+
     if (!accessToken) {
       console.error('Ошибка: Токен доступа не найден');
       return rejectWithValue('Токен доступа не найден');
     }
 
-    try {
-      const response = await fetch('https://norma.nomoreparties.space/api/auth/user', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch('https://norma.nomoreparties.space/api/auth/user', {
+      method: 'GET',
+      headers: {
+        'Authorization': `${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (response.status === 403 || response.status === 401) {
-        console.log('Токен недействителен. Обновляем токен...');
-        const refreshResult = await dispatch(refreshToken());
+    if (response.status === 403 || response.status === 401) {
+      console.log('Токен недействителен. Обновляем токен...');
+      const refreshResult = await dispatch(refreshToken());
 
-        if (refreshToken.fulfilled.match(refreshResult)) {
-          const newAccessToken = getCookie('accessToken');
-          console.log('Токен успешно обновлен. Повторяем запрос...');
-          
-          const retryResponse = await fetch('https://norma.nomoreparties.space/api/auth/user', {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${newAccessToken}`,
-              'Content-Type': 'application/json',
-            },
-          });
+      if (refreshToken.fulfilled.match(refreshResult)) {
+        const newAccessToken = getCookie('accessToken');
+        console.log('Токен успешно обновлен. Повторяем запрос...');
 
-          if (!retryResponse.ok) {
-            console.error('Ошибка при повторном запросе');
-            throw new Error('Ошибка при повторном запросе');
-          }
+        const retryResponse = await fetch('https://norma.nomoreparties.space/api/auth/user', {
+          method: 'GET',
+          headers: {
+            'Authorization': `${newAccessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
-          const retryData = await retryResponse.json();
-          return retryData.user;
-        } else {
-          console.error('Ошибка: Не удалось обновить токен.');
-          return rejectWithValue('Не удалось обновить токен.');
+        if (!retryResponse.ok) {
+          console.error('Ошибка при повторном запросе');
+          return rejectWithValue('Ошибка при повторном запросе');
         }
-      }
 
-      if (!response.ok) {
-        console.error('Ошибка получения данных пользователя');
-        throw new Error('Ошибка получения данных пользователя');
+        const retryData = await retryResponse.json();
+        return retryData.user;
+      } else {
+        console.error('Ошибка: Не удалось обновить токен.');
+        return rejectWithValue('Не удалось обновить токен.');
       }
-
-      const data = await response.json();
-      return data.user;
-    } catch (error) {
-      console.error('Ошибка при запросе:', error.message);
-      return rejectWithValue(error.message);
     }
+
+    if (!response.ok) {
+      console.error('Ошибка получения данных пользователя');
+      return rejectWithValue('Ошибка получения данных пользователя');
+    }
+
+    const data = await response.json();
+    return data.user;
   }
 );
+
 
 
 
@@ -180,7 +172,7 @@ export const updateUserData = createAsyncThunk(
       const response = await fetch('https://norma.nomoreparties.space/api/auth/user', {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
@@ -191,7 +183,7 @@ export const updateUserData = createAsyncThunk(
       }
 
       const data = await response.json();
-      return data.user; 
+      return data.user;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -201,45 +193,43 @@ export const updateUserData = createAsyncThunk(
 // Обновление токена
 export const refreshToken = createAsyncThunk('auth/refreshToken', async (_, { rejectWithValue }) => {
   const refreshToken = getCookie('refreshToken');
-  
+
   if (!refreshToken) {
     return rejectWithValue('Refresh token not found');
   }
-  
-  try {
-    const response = await fetch('https://norma.nomoreparties.space/api/auth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ token: refreshToken }),
-    });
 
-    const data = await response.json();
+  const response = await fetch('https://norma.nomoreparties.space/api/auth/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: refreshToken }),
+  });
 
-    if (!response.ok) {
-      throw new Error('Ошибка обновления токена');
-    }
+  const data = await response.json();
 
-    saveTokensToCookies(data.accessToken, data.refreshToken); 
-
-    return data;
-  } catch (error) {
-    if (error.message.includes('401')) {
+  if (!response.ok) {
+    if (response.status === 401) {
       deleteCookie('accessToken');
       deleteCookie('refreshToken');
       return rejectWithValue('Не удалось обновить токен. Пожалуйста, войдите снова.');
     }
-
-    return rejectWithValue(error.message);
+    return rejectWithValue('Ошибка обновления токена');
   }
+
+  saveTokensToCookies(data.accessToken, data.refreshToken);
+  return data;
 });
 
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
+  selectors: {
+    user: state => state.user,
+    accessToken: state => state.accessToken,
+  },
   extraReducers: (builder) => {
     builder
       // Регистрация
@@ -256,7 +246,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; 
+        state.error = action.payload;
       })
 
       // Авторизация
@@ -268,14 +258,15 @@ const authSlice = createSlice({
         state.user = action.payload.user || {};
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
+        state.isLoggedIn = true; 
         saveTokensToCookies(action.payload.accessToken, action.payload.refreshToken);
-      })
+    })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
         if (action.payload.includes('403')) {
           state.error = 'Доступ запрещен. Проверьте свои права.';
         } else {
-          state.error = action.payload; 
+          state.error = action.payload;
         }
       })
 
@@ -288,9 +279,10 @@ const authSlice = createSlice({
         state.user = null;
         state.accessToken = null;
         state.refreshToken = null;
+        state.isLoggedIn = false; 
         deleteCookie('refreshToken');
         deleteCookie('accessToken');
-      })
+    })
       .addCase(logoutUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
@@ -303,7 +295,8 @@ const authSlice = createSlice({
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; 
+        state.user = action.payload;
+        state.isLoggedIn = true;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
@@ -316,13 +309,13 @@ const authSlice = createSlice({
       })
       .addCase(updateUserData.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; 
+        state.user = action.payload;
       })
       .addCase(updateUserData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Обновление токена
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.status = 'succeeded';
@@ -336,6 +329,3 @@ const authSlice = createSlice({
       });
     },
 });
-
-export default authSlice.reducer;
-

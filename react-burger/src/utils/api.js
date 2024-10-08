@@ -24,3 +24,6 @@ export const request = (endpoint, options) => {
 };
 
 export const getIngredients = () => request("ingredients");
+
+
+

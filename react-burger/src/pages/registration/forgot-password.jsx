@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import { request } from '../../utils/api';
 import styles from './forgot-password.module.css';
 
 function ForgotPassword() {
@@ -9,7 +10,7 @@ function ForgotPassword() {
 
   const handleForgotPassword = async () => {
     try {
-      const response = await fetch('https://norma.nomoreparties.space/api/password-reset', {
+      const data = await request('password-reset', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -17,10 +18,7 @@ function ForgotPassword() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
-
       if (data.success) {
-        // Редирект на страницу сброса пароля
         navigate('/reset-password');
       } else {
         alert('Ошибка при отправке запроса');

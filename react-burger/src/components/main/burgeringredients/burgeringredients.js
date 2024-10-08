@@ -1,6 +1,7 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useInView} from 'react-intersection-observer';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import styles from './burgeringredients.module.css';
 import {ingredientsSlice} from '../../../services/ingredients/slice.js';
 
@@ -8,18 +9,11 @@ import TabL from './nav-tab/nav-tab.jsx';
 import { CardBun } from './card-bun/card-bun.jsx';
 import { CardSauce } from './card-sauce/card-sauce.jsx';
 import { CardMain } from './card-main/card-main.jsx';
-import IngredientDetails from "../modal/ingredient-details";
-import Modal from "../modal/modal";
-import {
-    clearSelectedIngredient,
-    selectedIngredientSlice,
-    selectIngredient
-} from "../../../services/selectedingredient/slice";
 
 function BurgerIngredients() {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const currentLocation = useLocation();
     const [currentTab, setCurrentTab] = useState("one");
-    const selectedIngredient = useSelector(selectedIngredientSlice.selectors.selectedIngredient);
     const buns = useSelector(ingredientsSlice.selectors.buns);
     const mains = useSelector(ingredientsSlice.selectors.mains);
     const sauces = useSelector(ingredientsSlice.selectors.sauces);
@@ -48,12 +42,9 @@ function BurgerIngredients() {
         }
     }, [inViewOne, inViewTwo, inViewThree]);
     
-    const setSelectedIngredient = useCallback((ingredient) => {
-        dispatch(selectIngredient(ingredient));
-        
-        window.open(`/ingredients/${ingredient._id}`, '_blank');
-    }, [dispatch]);
-    
+    const handleIngredientClick = (ingredient) => {
+        navigate(`/ingredients/${ingredient._id}`, { state: { backgroundLocation: currentLocation } });
+    };
 
     return (
         <section className={styles.content_left}>
@@ -76,7 +67,7 @@ function BurgerIngredients() {
                         <h2 className={` ${'text'} ${'text_type_main-medium'} ${'pl-0'} ${'pt-0'} ${'pr-0'} ${'pb-6'}`}>Булки</h2>
                         <div className={styles.ingr_holder}>
                             <CardBun data={buns}
-                                     onClick={setSelectedIngredient}/>
+                                     onClick={handleIngredientClick}/>
                         </div>
                     </div>
 
@@ -84,7 +75,7 @@ function BurgerIngredients() {
                         <h2 className={` ${'text'} ${'text_type_main-medium'} ${'pl-0'} ${'pt-0'} ${'pr-0'} ${'pb-6'}`}>Соусы</h2>
                         <div className={styles.ingr_holder}>
                             <CardSauce data={sauces}
-                                       onClick={setSelectedIngredient}/>
+                                       onClick={handleIngredientClick}/>
                         </div>
                     </div>
 
@@ -92,22 +83,12 @@ function BurgerIngredients() {
                         <h2 className={` ${'text'} ${'text_type_main-medium'} ${'pl-0'} ${'pt-0'} ${'pr-0'} ${'pb-6'}`}>Начинки</h2>
                         <div className={styles.ingr_holder}>
                             <CardMain data={mains}
-                                      onClick={setSelectedIngredient}/>
+                                      onClick={handleIngredientClick}/>
                         </div>
                     </div>
                 </div>
 
             </div>
-            {selectedIngredient && (
-                <Modal
-                    handleClose={() => {
-                        dispatch(clearSelectedIngredient());
-                    }}
-                    title={"Детали ингредиента"}
-                >
-                    <IngredientDetails details={selectedIngredient}/>
-                </Modal>
-            )}
         </section>
     )
 }

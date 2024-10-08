@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
 import styles from "./modal.module.css";
@@ -12,13 +13,20 @@ Modal.propTypes = {
 };
 
 function Modal({ handleClose, children, title }) {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const closeOnEscapeKey = (e) => (e.key === "Escape" ? handleClose() : null);
+    const closeOnEscapeKey = (e) => {
+      if (e.key === "Escape") {
+        handleClose(); 
+        navigate(-1); 
+      }
+    };
     document.body.addEventListener("keydown", closeOnEscapeKey);
     return () => {
       document.body.removeEventListener("keydown", closeOnEscapeKey);
     };
-  }, [handleClose]);
+  }, [handleClose, navigate]); 
 
   return ReactDOM.createPortal(
     (
